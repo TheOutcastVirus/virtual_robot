@@ -75,12 +75,11 @@ public class GuidedVectorFieldFollower implements Follower {
         else
             this.tangentDistance = tangentDistance;
 
-        if (maxSpeed > 1)
-            this.maxSpeed = 1;
-        else if (maxSpeed < 1)
-            this.maxSpeed = 0.05;
-        else
-            this.maxSpeed = maxSpeed;
+        this.maxSpeed = maxSpeed;
+
+        xPID = new PIDController(1,0,0);
+        yPID = new PIDController(1,0,0);
+        headingPID = new PIDController(1,0,0);
     }
 
     /**
@@ -141,6 +140,42 @@ public class GuidedVectorFieldFollower implements Follower {
             // Return the new vector in the robot's frame of reference
             return new Pose2d(robotFrame, 0);
         }
+    }
+
+    /**
+     * Feeds the drive powers to the drivetrain based on the direction of the
+     * vector gradient field at the current point. Only provides x and y translation,
+     * no heading in this implementation.
+     * @param currentPosition robot current position
+     * @return Drive power
+     */
+    public Pose2d getDriveVelocity2(Pose2d currentPosition) {
+
+        // If no path has been set, do not return anything
+        if (this.parametricPath == null)
+            return null;
+
+        double distanceToEnd = currentPosition.vec().distanceTo(parametricPath.getPoint(1));
+
+        Vector2d currentPoint = currentPosition.vec();
+
+        // Find the closest point on the path from the robot and get it's t-value
+        double closestTValue = PointProjection.projectionBinarySearch(parametricPath, currentPoint, 10);
+
+        // Calculate the tangent point (point that the robot goes towards
+        Vector2d tangentPoint = parametricPath.getPoint(closestTValue).add(
+                parametricPath.getDerivative(closestTValue).normalize().multiply(tangentDistance));
+
+        // Get the vector pointing from the robot to the tangent point
+        Vector2d connectingVector = tangentPoint.subtract(currentPoint);
+        Vector2d normalizedVector = connectingVector.normalize();
+
+        // Scale the speed by the max speed
+        Vector2d velocityVector = normalizedVector.scalarMultiply(maxSpeed);
+
+        Vector2d robotFrame = velocityVector.fieldToRobotCentric(currentPosition.getHeading());
+        // Return the new vector in the robot's frame of reference
+        return new Pose2d(robotFrame, 0);
     }
 
     @Override

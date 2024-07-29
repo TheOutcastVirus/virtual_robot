@@ -31,13 +31,13 @@ public class PathFollowingTest extends LinearOpMode {
 
         CustomMecanumDrive drive = new CustomMecanumDrive(hardwareMap);
 
-        GuidedVectorFieldFollower follower = new GuidedVectorFieldFollower(0.5);
+        GuidedVectorFieldFollower follower = new GuidedVectorFieldFollower(1, 1);
 
         drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
 
         follower.setPath(new CubicBezierCurve(
-                        new Vector2d(0,0), new Vector2d(48,0),
-                         new Vector2d(48,0), new Vector2d(48,48)));
+                        new Vector2d(0,0), new Vector2d(-23.8,22),
+                         new Vector2d(21.7,34.9), new Vector2d(12,60)));
 
         telemetry.addData("Press Start When Ready","");
         telemetry.update();
