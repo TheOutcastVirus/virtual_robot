@@ -46,6 +46,8 @@ public class CustomMecanumDrive {
     private Localizer localizer;
     public Follower follower;
 
+    private boolean isFollowing = false;
+
     public CustomMecanumDrive(HardwareMap hardwareMap) {
 
 
@@ -122,17 +124,30 @@ public class CustomMecanumDrive {
         // TODO: if desired, use setLocalizer() to change the localization method
         localizer = new TestOpticalOdometery(hardwareMap);
 
-        follower = new GuidedVectorFieldFollower(10);
+        // Change these constants in TuneableConstants.java only
+        follower = new GuidedVectorFieldFollower(
+                TuneableConstants.tangentDistance,
+                TuneableConstants.xPIDCoeffs,
+                TuneableConstants.yPIDCoeffs,
+                TuneableConstants.headingPIDCoeffs,
+                TuneableConstants.maxSpeed
+        );
 
     }
 
 
     public void update() {
         updatePoseEstimate();
-        setDrivePower(follower.getDriveVelocity(getPoseEstimate()));
+        // Only adhere to the follower when path following is enabled.
+        if (isFollowing) {
+            // Check if the path is complete. If it is, stop following.
+            if (follower.isComplete(getPoseEstimate())) {
+                isFollowing = false;
+            } else setDrivePower(follower.getDriveVelocity(getPoseEstimate()));
+        }
     }
 
-    /**
+    /*
      * Follower functions
      */
 
@@ -140,7 +155,11 @@ public class CustomMecanumDrive {
         follower.setPath(parametricPath);
     }
 
-    /**
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
+
+    /*
      * Motor Behavior Functions
      */
 
@@ -167,7 +186,7 @@ public class CustomMecanumDrive {
         }
     }
 
-    /**
+    /*
      * Drive functions
      */
 
@@ -208,7 +227,7 @@ public class CustomMecanumDrive {
         rightFront.setPower(v3);
     }
 
-    /**
+    /*
      * Wheel velocities and kinematics
      */
 
@@ -238,7 +257,7 @@ public class CustomMecanumDrive {
         return wheelVelocities;
     }
 
-    /**
+    /*
      * Localizer functions
      */
 

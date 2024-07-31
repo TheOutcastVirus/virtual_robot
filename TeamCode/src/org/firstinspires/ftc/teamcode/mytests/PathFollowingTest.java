@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.customdrive.CustomMecanumDrive;
  * Example OpMode. Demonstrates use of gyro, color sensor, encoders, and telemetry.
  *
  */
-@TeleOp(name = "Path Following Test", group = "MecanumBot")
+@TeleOp(name = "Path Following Test", group = "1111")
 public class PathFollowingTest extends LinearOpMode {
 
     public void runOpMode(){

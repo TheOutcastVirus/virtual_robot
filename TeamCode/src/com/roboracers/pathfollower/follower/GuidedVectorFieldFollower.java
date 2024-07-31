@@ -32,14 +32,11 @@ public class GuidedVectorFieldFollower implements Follower {
      */
     private double maxSpeed = 0.75;
     /**
-     * Threshold for the end PID to kick in.
+     * Threshold for the end PID to kick in, measured in inches.
      */
     private double PIDThreshold = 1;
-    /**
-     * Displays if the ending PID has kicked in yet or not.
-     */
-    private boolean usingPID = false;
 
+    private boolean followingSequence = false;
     /*
      Ending PIDs
      */
@@ -58,7 +55,7 @@ public class GuidedVectorFieldFollower implements Follower {
         headingPID = new PIDController(1,0,0);
     }
 
-    public GuidedVectorFieldFollower(double tangentDistance, PIDCoefficients xPIDCoeffs, PIDCoefficients yPIDCoeffs, PIDCoefficients headingPIDCoeffs) {
+    public GuidedVectorFieldFollower(double tangentDistance, PIDCoefficients xPIDCoeffs, PIDCoefficients yPIDCoeffs, PIDCoefficients headingPIDCoeffs, double maxSpeed) {
         if (tangentDistance <= 0)
             this.tangentDistance = 0.1;
         else
@@ -79,7 +76,7 @@ public class GuidedVectorFieldFollower implements Follower {
 
         xPID = new PIDController(1,0,0);
         yPID = new PIDController(1,0,0);
-        headingPID = new PIDController(1,0,0);
+        headingPID = new PIDController(0,0,0);
     }
 
     /**
@@ -107,20 +104,33 @@ public class GuidedVectorFieldFollower implements Follower {
 
         double threshold = 1;
 
-        double distanceToEnd = currentPosition.vec().distanceTo(parametricPath.getPoint(1));
+        Vector2d endpoint = parametricPath.getPoint(1);
+        double distanceToEnd = currentPosition.vec().distanceTo(endpoint);
 
         // Use the ending PID while within threshold.
-        if (Math.abs(distanceToEnd) < threshold) {
+        if (Math.abs(distanceToEnd) < PIDThreshold) {
+            Vector2d endDerivative = parametricPath.getDerivative(0.99);
+
+            double headingTarget = Math.atan2(endDerivative.getY(), endDerivative.getX());
+
+            // Debugging values
             usingPID = true;
+            currentClosestTValue = 0;
+            currentDistanceToEnd = distanceToEnd;
+            currentClosestPoint = new Vector2d(0,0);
+            currentTangentPoint = new Vector2d(0,0);
+            currentDrivePower = new Pose2d();
+            currentHeadingTarget = headingTarget;
+
             return PIDToPoint(
-                    new Pose2d(parametricPath.getPoint(1),0),
+                    new Pose2d(endpoint, headingTarget),
                     currentPosition
             );
         } else {
             usingPID = false;
             Vector2d currentPoint = currentPosition.vec();
 
-            // Find the closest point on the path from the robot and get it's t-value
+            // Find the closest point on the path from the robot and get its t-value
             double closestTValue = PointProjection.projectionBinarySearch(parametricPath, currentPoint, 10);
 
             // Calculate the tangent point (point that the robot goes towards
@@ -137,8 +147,23 @@ public class GuidedVectorFieldFollower implements Follower {
             // Rotate the vector to the robot's frame of reference
             Vector2d robotFrame = velocityVector.rotated(-currentPosition.getHeading());
 
+            // Heading calcs
+            double headingTarget = Math.atan2(robotFrame.getY(), robotFrame.getX());
+            headingPID.setSetpoint(headingTarget);
+
+            Pose2d drivePower = new Pose2d(robotFrame, headingPID.update(currentPosition.getHeading()));
+
+            // Debugging values
+            usingPID = false;
+            currentClosestTValue = closestTValue;
+            currentDistanceToEnd = distanceToEnd;
+            currentClosestPoint = parametricPath.getPoint(closestTValue);
+            currentTangentPoint = tangentPoint;
+            currentDrivePower = drivePower;
+            currentHeadingTarget = headingTarget;
+
             // Return the new vector in the robot's frame of reference
-            return new Pose2d(robotFrame, 0);
+            return drivePower;
         }
     }
 
@@ -178,6 +203,11 @@ public class GuidedVectorFieldFollower implements Follower {
         return new Pose2d(robotFrame, 0);
     }
 
+    /**
+     * Check if the robot has reached the end of the path.
+     * @param currentPosition robot current position
+     * @return true if the robot has reached the end of the path, false otherwise
+     */
     @Override
     public Boolean isComplete(Pose2d currentPosition) {
 
@@ -204,7 +234,7 @@ public class GuidedVectorFieldFollower implements Follower {
 
         xPID.setSetpoint(target.getX());
         yPID.setSetpoint(target.getY());
-        headingPID.setSetpoint(Math.toRadians(target.getHeading()));
+        headingPID.setSetpoint(target.getHeading());
 
         Vector2d translationPowers = new Vector2d(
                 xPID.update(currentPose.getX()),
@@ -217,4 +247,31 @@ public class GuidedVectorFieldFollower implements Follower {
         );
     }
 
+    /*
+     * Status variables.
+     */
+    /**
+     * Displays if the ending PID has kicked in yet or not.
+     */
+    protected boolean usingPID = false;
+    public double currentClosestTValue;
+    public double currentDistanceToEnd;
+    public Vector2d currentClosestPoint;
+    public Vector2d currentTangentPoint;
+    public Pose2d currentDrivePower;
+    public double currentHeadingTarget;
+
+    public class DebugPacket {
+        public boolean usingPID;
+        public double currentClosestTValue;
+        public double currentDistanceToEnd;
+        public Vector2d currentClosestPoint;
+        public Vector2d currentTangentPoint;
+        public Pose2d currentDrivePower;
+        public double currentHeadingTarget;
+
+        public DebugPacket(GuidedVectorFieldFollower follower) {
+            this.usingPID = follower.usingPID;
+        }
+    }
 }
