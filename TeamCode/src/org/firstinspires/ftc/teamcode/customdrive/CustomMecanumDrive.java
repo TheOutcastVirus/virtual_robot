@@ -44,7 +44,7 @@ public class CustomMecanumDrive {
     private VoltageSensor batteryVoltageSensor;
 
     private Localizer localizer;
-    public Follower follower;
+    public GuidedVectorFieldFollower follower;
 
     private boolean isFollowing = false;
 

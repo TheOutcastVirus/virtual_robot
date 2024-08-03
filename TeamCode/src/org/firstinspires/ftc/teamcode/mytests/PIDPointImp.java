@@ -27,15 +27,15 @@ public class PIDPointImp extends LinearOpMode {
     public static double hkI = 0;
     public static double hkD = 0;
 
-    public static double xTarget = 25;
-    public static double yTarget = 25;
-    public static double headingTarget = 0;
+    public static double xTarget = -25;
+    public static double yTarget = 50;
+    public static double headingTarget = 45;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         drive = new CustomMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(0,0,0));
+        drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
 
 
         waitForStart();

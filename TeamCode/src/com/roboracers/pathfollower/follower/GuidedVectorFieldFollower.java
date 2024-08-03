@@ -272,6 +272,33 @@ public class GuidedVectorFieldFollower implements Follower {
 
         public DebugPacket(GuidedVectorFieldFollower follower) {
             this.usingPID = follower.usingPID;
+            this.currentClosestTValue = follower.currentClosestTValue;
+            this.currentDistanceToEnd = follower.currentDistanceToEnd;
+            this.currentClosestPoint = follower.currentClosestPoint;
+            this.currentTangentPoint = follower.currentTangentPoint;
+            this.currentDrivePower = follower.currentDrivePower;
+            this.currentHeadingTarget = follower.currentHeadingTarget;
         }
+
+        @Override
+        public String toString() {
+            return "DebugPacket for GVF Follower {" +
+                    "usingPID=" + usingPID +
+                    ", currentClosestTValue=" + currentClosestTValue +
+                    ", currentDistanceToEnd=" + currentDistanceToEnd +
+                    ", currentClosestPoint=" + currentClosestPoint +
+                    ", currentTangentPoint=" + currentTangentPoint +
+                    ", currentDrivePower=" + currentDrivePower +
+                    ", currentHeadingTarget=" + currentHeadingTarget +
+                    '}';
+        }
+    }
+
+    /**
+     * Returns useful information about the current state of the follower.
+     * @return DebugPacket
+     */
+    public DebugPacket getDebugPacket() {
+        return new DebugPacket(this);
     }
 }

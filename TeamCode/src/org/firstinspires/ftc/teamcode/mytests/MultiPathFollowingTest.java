@@ -60,7 +60,8 @@ public class MultiPathFollowingTest extends LinearOpMode {
                 drive.update();
             }
 
-
+            telemetry.addLine(drive.follower.getDebugPacket().toString());
+            System.out.println(drive.follower.getDebugPacket().toString());
             telemetry.update();
         }
     }

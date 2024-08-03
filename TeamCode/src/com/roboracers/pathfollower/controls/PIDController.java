@@ -1,7 +1,5 @@
 package com.roboracers.pathfollower.controls;
 
-import com.acmerobotics.roadrunner.control.PIDFController;
-
 /**
  * The PIDController class implements a simple Proportional-Integral-Derivative (PID) controller.
  * This controller can be used to regulate the behavior of various systems, such as maintaining a
@@ -54,7 +52,6 @@ public class PIDController {
 
     /**
      * Updates the PID controller with the current measured value and returns the control output.
-     *
      * @param currentValue the current measured value
      * @return the control output
      */

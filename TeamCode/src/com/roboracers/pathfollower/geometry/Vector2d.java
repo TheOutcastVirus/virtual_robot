@@ -80,4 +80,9 @@ public class Vector2d {
         return new Vector2d(xRobot, yRobot);
     }
 
+    @Override
+    public String toString() {
+        return String.format("(%.3f, %.3f)", x, y);
+    }
+
 }
