@@ -1,23 +1,12 @@
 package org.firstinspires.ftc.teamcode.mytests;
 
-import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.roboracers.pathfollower.follower.GuidedVectorFieldFollower;
-import com.roboracers.pathfollower.geometry.Pose2d;
-import com.roboracers.pathfollower.geometry.Vector2d;
-import com.roboracers.pathfollower.planner.CubicBezierCurve;
+import com.roboracers.topgear.follower.GuidedVectorFieldFollower;
+import com.roboracers.topgear.geometry.Pose2d;
+import com.roboracers.topgear.geometry.Vector2d;
+import com.roboracers.topgear.planner.CubicBezierCurve;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.customdrive.CustomMecanumDrive;
 
 /**

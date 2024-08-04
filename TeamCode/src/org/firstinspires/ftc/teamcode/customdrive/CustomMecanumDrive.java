@@ -14,11 +14,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-import com.roboracers.pathfollower.follower.Follower;
-import com.roboracers.pathfollower.follower.GuidedVectorFieldFollower;
-import com.roboracers.pathfollower.geometry.Pose2d;
-import com.roboracers.pathfollower.localization.Localizer;
-import com.roboracers.pathfollower.planner.ParametricPath;
+import com.roboracers.topgear.follower.GuidedVectorFieldFollower;
+import com.roboracers.topgear.geometry.Pose2d;
+import com.roboracers.topgear.localization.Localizer;
+import com.roboracers.topgear.planner.ParametricPath;
 
 import java.util.ArrayList;
 import java.util.Arrays;

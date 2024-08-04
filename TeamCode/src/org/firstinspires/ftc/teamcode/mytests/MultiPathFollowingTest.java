@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode.mytests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.roboracers.pathfollower.follower.GuidedVectorFieldFollower;
-import com.roboracers.pathfollower.geometry.Pose2d;
-import com.roboracers.pathfollower.geometry.Vector2d;
-import com.roboracers.pathfollower.planner.CubicBezierCurve;
-import com.roboracers.pathfollower.planner.CurveBuilder;
-import com.roboracers.pathfollower.planner.ParametricPath;
+import com.roboracers.topgear.geometry.Pose2d;
+import com.roboracers.topgear.geometry.Vector2d;
+import com.roboracers.topgear.planner.CurveBuilder;
+import com.roboracers.topgear.planner.ParametricPath;
 
 import org.firstinspires.ftc.teamcode.customdrive.CustomMecanumDrive;
 

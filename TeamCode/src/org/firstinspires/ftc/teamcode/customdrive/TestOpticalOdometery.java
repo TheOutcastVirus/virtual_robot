@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.customdrive;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.roboracers.pathfollower.geometry.Pose2d;
-import com.roboracers.pathfollower.localization.Localizer;
+import com.roboracers.topgear.geometry.Pose2d;
+import com.roboracers.topgear.localization.Localizer;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
